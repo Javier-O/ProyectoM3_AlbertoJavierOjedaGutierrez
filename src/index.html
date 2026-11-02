@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Mobile-first: sin esta línea el celular dibuja la página como si fuera de escritorio -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chatea con Deadpool</title>
+
+    <!-- Tipografías: Bangers (títulos estilo cómic) + DM Sans (texto de lectura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CAMBIO 1: rutas ABSOLUTAS (empiezan con "/").
+         Con rutas relativas, en /chat el navegador buscaría "/chat/styles.css" y fallaría. -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+  <body>
+    <!-- ENCABEZADO: los links llevan data-link; app.js los intercepta y usa History API -->
+    <header class="site-header">
+      <a class="brand" href="/home" data-link>Deadpool Chat</a>
+      <nav class="nav" aria-label="Navegación principal">
+        <!-- CAMBIO 2: quitamos el aria-current fijo; ahora lo pone el router -->
+        <a href="/home" data-link>Home</a>
+        <a href="/chat" data-link>Chat</a>
+        <a href="/about" data-link>About</a>
+      </nav>
+    </header>
+
+    <!-- CAMBIO 3: <main> queda vacío. El router copia aquí la vista activa -->
+    <main id="app"></main>
+
+    <footer class="site-footer">
+      <small>Proyecto Integrador M3 · Henry</small>
+    </footer>
+
+    <!-- =========================================================
+         VISTAS: cada <template> es invisible hasta que el router lo clona
+         ========================================================= -->
+
+    <!-- Vista /home -->
+    <template id="view-home">
+      <section class="view view--home">
+        <h1 class="view__title">Chatea con Deadpool</h1>
+        <p class="view__lead">
+          Mercenario bocón, imposible de matar y experto en romper la cuarta
+          pared. Pregúntale lo que quieras: te va a contestar a su manera.
+        </p>
+        <a class="btn" href="/chat" data-link>Empezar a chatear</a>
+      </section>
+    </template>
+
+    <!-- Vista /chat (es la que ya teníamos, movida a un template) -->
+    <template id="view-chat">
+      <section class="chat-layout">
+        <!-- Panel del personaje: solo se ve en desktop (ver media query) -->
+        <aside class="character-panel">
+          <h2>Deadpool</h2>
+          <p>
+            Mercenario bocón, experto en romper la cuarta pared y en no tomarse
+            nada en serio. Pregúntale lo que quieras.
+          </p>
+        </aside>
+
+        <section class="chat" aria-label="Conversación con Deadpool">
+          <ol class="chat__messages" id="messages" aria-live="polite">
+            <!-- Los mensajes los pinta chat.js -->
+          </ol>
+
+          <form class="chat__form" id="chat-form" autocomplete="off">
+            <label class="visually-hidden" for="chat-input">Tu mensaje</label>
+            <input
+              id="chat-input"
+              class="chat__input"
+              type="text"
+              placeholder="Escribe un mensaje..."
+              maxlength="500"
+              required
+            />
+            <button class="chat__send" type="submit">Enviar</button>
+          </form>
+        </section>
+      </section>
+    </template>
+
+    <!-- Vista /about -->
+    <template id="view-about">
+      <section class="view view--about">
+        <h1 class="view__title">Acerca del proyecto</h1>
+
+        <h2>El proyecto</h2>
+        <p>
+          Prueba de concepto para ComicSansCon: una Single Page Application
+          donde el usuario conversa con un personaje de ficción. Las respuestas
+          las genera Google Gemini a través de una función serverless de
+          Vercel, así la API key nunca llega al navegador.
+        </p>
+
+        <h2>El personaje</h2>
+        <p>
+          Deadpool (Wade Wilson) es un mercenario de Marvel conocido por su
+          humor irreverente, su factor de curación y por hablarle directamente
+          al público. Este chat es un proyecto educativo sin fines de lucro;
+          el personaje pertenece a Marvel.
+        </p>
+
+        <h2>Tecnología</h2>
+        <p>
+          HTML, CSS y JavaScript sin frameworks, navegación con History API,
+          tests con Vitest y despliegue en Vercel.
+        </p>
+
+        <h2>Autor</h2>
+        <p>Alberto Javier Ojeda Gutiérrez · Proyecto Integrador del Módulo 3, Henry.</p>
+      </section>
+    </template>
+
+    <!-- CAMBIO 4: el script va como "module" para poder usar import/export -->
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

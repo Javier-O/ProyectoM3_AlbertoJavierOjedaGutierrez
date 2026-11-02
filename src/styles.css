@@ -1,0 +1,402 @@
+/* =========================================================
+   Deadpool Chat — estilos MOBILE-FIRST
+   Los estilos base son para celular. Las media queries del
+   final (min-width) van agregando cambios para tablet y desktop.
+   ========================================================= */
+
+/* ---------- 1. Variables (colores y tipografías) ---------- */
+:root {
+  --red: #c8102e; /* rojo del traje */
+  --ink: #14141a; /* negro cómic */
+  --paper: #eceef3; /* fondo de los paneles */
+  --white: #ffffff;
+  --yellow: #ffd23f; /* caja de narración */
+
+  --font-title: "Bangers", "Impact", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+
+  --shadow-hard: 3px 3px 0 var(--ink); /* sombra "de cómic", sin difuminar */
+}
+
+/* ---------- 2. Reset básico ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.5;
+
+  /* Layout de página: header (auto) / contenido (1fr) / footer (auto).
+     100dvh = alto real visible en celular (descuenta la barra del navegador). */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh;
+}
+
+/* Texto solo para lectores de pantalla (la etiqueta del input) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- 3. Header y navegación ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--red);
+  color: var(--white);
+  border-bottom: 3px solid var(--ink);
+}
+
+.brand {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  background: var(--ink);
+}
+
+/* Foco visible para quien navega con teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+/* ---------- 4. Contenido principal ---------- */
+main {
+  min-height: 0; /* clave: permite que el scroll ocurra DENTRO del chat */
+  overflow-y: auto; /* Home y About pueden ser más largos que la pantalla */
+
+  /* Fondo de puntos de impresión (halftone) en rojo muy suave */
+  background-image: radial-gradient(rgba(200, 16, 46, 0.14) 1.5px, transparent 1.6px);
+  background-size: 14px 14px;
+}
+
+.chat-layout {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr; /* móvil: una sola columna */
+}
+
+/* El panel del personaje se oculta en móvil/tablet; aparece en desktop */
+.character-panel {
+  display: none;
+}
+
+/* ---------- 5. Chat ---------- */
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--paper);
+}
+
+/* Lista de mensajes: es lo único que hace scroll */
+.chat__messages {
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Burbuja base (compartida) */
+.message {
+  max-width: 85%;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow-hard);
+}
+
+.message__text {
+  margin: 0;
+  overflow-wrap: anywhere; /* evita que palabras largas rompan el layout */
+}
+
+.message__author {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--red);
+}
+
+/* Mensajes del personaje: blancos, a la izquierda */
+.message--character {
+  align-self: flex-start;
+  background: var(--white);
+  border-bottom-left-radius: 3px; /* esquina "cola" de la burbuja */
+}
+
+/* Mensajes del usuario: negros, a la derecha */
+.message--user {
+  align-self: flex-end;
+  background: var(--ink);
+  color: var(--white);
+  border-bottom-right-radius: 3px;
+  box-shadow: 3px 3px 0 var(--red);
+}
+
+/* Error: caja amarilla, como las cajas de narración del cómic */
+.message--error {
+  align-self: center;
+  max-width: 100%;
+  background: var(--yellow);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Indicador "escribiendo..." (tres puntos animados) */
+.typing {
+  display: flex;
+  gap: 5px;
+  padding: 0.35rem 0;
+}
+
+.typing span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: bounce 1s infinite ease-in-out;
+}
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Respeta a quien desactiva animaciones en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  .typing span { animation: none; opacity: 0.7; }
+}
+
+/* ---------- 6. Formulario de envío ---------- */
+.chat__form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--white);
+  border-top: 3px solid var(--ink);
+}
+
+.chat__input {
+  flex: 1;
+  min-width: 0; /* sin esto el input se niega a encogerse en pantallas pequeñas */
+  padding: 0.7rem 0.9rem;
+  font: inherit; /* 16px+ evita el zoom automático de iOS al enfocar */
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+.chat__send {
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  background: var(--red);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  cursor: pointer;
+}
+
+.chat__send:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.chat__send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- 7. Footer ---------- */
+.site-footer {
+  padding: 0.35rem 1rem;
+  text-align: center;
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* ---------- 8. Vistas Home y About (nuevo en el paso 3) ---------- */
+/* Tarjeta de contenido: fondo sólido para que el texto se lea sobre los puntos */
+.view {
+  width: calc(100% - 2rem);
+  max-width: 640px;
+  margin: 1rem auto;
+  padding: 1.5rem 1.25rem 2rem;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.view__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-title);
+  font-size: 2.6rem;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+}
+
+.view__lead {
+  margin: 0 0 1.5rem;
+  font-size: 1.1rem;
+  max-width: 60ch; /* líneas cortas = lectura cómoda */
+}
+
+.view h2 {
+  margin: 1.5rem 0 0.25rem;
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--red);
+}
+
+.view p {
+  margin: 0 0 0.5rem;
+  max-width: 65ch;
+}
+
+/* Botón principal (link con aspecto de botón) */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  background: var(--red);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* =========================================================
+   MEDIA QUERIES (mobile-first: solo agregan, nunca quitan base)
+   Los 3 tamaños a probar en DevTools:
+   - Móvil:   375px  (estilos base, arriba)
+   - Tablet:  768px
+   - Desktop: 1280px
+   ========================================================= */
+
+/* ----- TABLET (≥ 768px): el chat se centra como una "tarjeta" ----- */
+@media (min-width: 768px) {
+  .site-header {
+    padding: 0.75rem 2rem;
+  }
+
+  .brand {
+    font-size: 1.8rem;
+  }
+
+  .nav a {
+    font-size: 1rem;
+  }
+
+  .chat-layout {
+    padding: 1.5rem;
+  }
+
+  .chat {
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+    border: 3px solid var(--ink);
+    border-radius: 16px;
+    box-shadow: 6px 6px 0 var(--ink);
+    overflow: hidden; /* respeta las esquinas redondeadas */
+  }
+
+  .message {
+    max-width: 75%;
+  }
+}
+
+/* ----- DESKTOP (≥ 1100px): dos columnas con Grid ----- */
+@media (min-width: 1100px) {
+  .chat-layout {
+    grid-template-columns: 320px 1fr; /* panel fijo + chat flexible */
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .character-panel {
+    display: block;
+    align-self: start;
+    padding: 1.25rem;
+    background: var(--yellow);
+    border: 3px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .character-panel h2 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-title);
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .character-panel p {
+    margin: 0;
+  }
+
+  /* En desktop el chat ocupa su columna completa, sin centrado extra */
+  .chat {
+    max-width: none;
+    margin: 0;
+  }
+}
