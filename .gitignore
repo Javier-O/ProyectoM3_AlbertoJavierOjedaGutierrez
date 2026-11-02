@@ -1,0 +1,15 @@
+# Dependencias
+node_modules/
+
+# Secretos: NUNCA subir la API key
+.env
+.env.local
+
+# Carpeta que crea la CLI de Vercel al vincular el proyecto
+.vercel/
+
+# Reportes de tests y archivos del sistema
+coverage/
+.DS_Store
+
+.vercel
